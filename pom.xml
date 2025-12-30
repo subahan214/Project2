@@ -11,7 +11,6 @@
     <version>1.0.1</version>
     <packaging>war</packaging>
 
-    <!-- Project Name -->
     <name>Project2</name>
 
     <properties>
@@ -35,7 +34,7 @@
     <build>
         <plugins>
 
-            <!-- Modern Maven WAR Plugin -->
+            <!-- Maven WAR Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -45,7 +44,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Run Gulp via npx -->
+            <!-- Gulp Build via npx -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -70,7 +69,7 @@
                 </executions>
             </plugin>
 
-            <!-- Copy frontend build output -->
+            <!-- Copy Frontend Build Output -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.3.0</version>
@@ -92,6 +91,18 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- Tomcat Deployment Plugin -->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                     <url>http://13.53.142.105:9090/manager/text</url>
+                    <server>tomcat-server</server>
+                    <path>/Iman</path>
+                </configuration>
             </plugin>
 
         </plugins>
