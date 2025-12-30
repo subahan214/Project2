@@ -4,6 +4,10 @@
 # Node modules
 /node_modules/
 
+# **Frontend Maven Plugin** (ADD THESE)
+/target/node/
+/target/npm/
+
 # Logs
 *.log
 
