@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.Ahllulbaith</groupId>
+    <artifactId>Iman</artifactId>
+    <version>1.0.1</version>
+    <packaging>jar</packaging>
+
+    <!-- ✅ Correct project name -->
+    <name>Project2</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- ✅ Sonar configuration -->
+        <sonar.projectKey>Project2</sonar.projectKey>
+        <sonar.projectName>Project2</sonar.projectName>
+    </properties>
+    <distributionManagement>
+    <repository>
+        <id>nexus-release</id>
+        <url>http://13.50.105.189:8081/repository/maven-release1/</url>
+    </repository>
+</distributionManagement>
+ 
+    <build>
+        <plugins>
+
+            <!-- ✅ Run gulp safely using npx -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>gulp</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo message="Running Gulp build via npx..." />
+                                <exec executable="npx">
+                                    <arg value="gulp"/>
+                                    <arg value="build"/>
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- ✅ Copy frontend build output -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${basedir}/target/classes/META-INF/resources
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>dest</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
