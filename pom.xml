@@ -9,29 +9,43 @@
     <groupId>com.Ahllulbaith</groupId>
     <artifactId>Iman</artifactId>
     <version>1.0.1</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
-    <!-- ✅ Correct project name -->
+    <!-- Project Name -->
     <name>Project2</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
 
-        <!-- ✅ Sonar configuration -->
+        <!-- Sonar Configuration -->
         <sonar.projectKey>Project2</sonar.projectKey>
         <sonar.projectName>Project2</sonar.projectName>
     </properties>
+
+    <!-- Nexus Release Repository -->
     <distributionManagement>
-    <repository>
-        <id>nexus-release</id>
-        <url>http://13.50.105.189:8081/repository/maven-release1/</url>
-    </repository>
-</distributionManagement>
- 
+        <repository>
+            <id>nexus-release</id>
+            <url>http://13.50.105.189:8081/repository/maven-release1/</url>
+        </repository>
+    </distributionManagement>
+
     <build>
         <plugins>
 
-            <!-- ✅ Run gulp safely using npx -->
+            <!-- Modern Maven WAR Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+
+            <!-- Run Gulp via npx -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -56,9 +70,10 @@
                 </executions>
             </plugin>
 
-            <!-- ✅ Copy frontend build output -->
+            <!-- Copy frontend build output -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <id>copy-resources</id>
@@ -67,9 +82,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>
-                                ${basedir}/target/classes/META-INF/resources
-                            </outputDirectory>
+                            <outputDirectory>${basedir}/target/classes/META-INF/resources</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>dest</directory>
