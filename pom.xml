@@ -8,31 +8,26 @@
 
     <groupId>com.Ahllulbaith</groupId>
     <artifactId>Iman</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>Project2</name>
+    <name>Iman</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.release>17</maven.compiler.release>
-
-        <!-- Sonar Configuration -->
-        <sonar.projectKey>Project2</sonar.projectKey>
-        <sonar.projectName>Project2</sonar.projectName>
-        <sonar.host.url>http://your-sonarqube-server:9000</sonar.host.url>
         
-        <!-- Node.js versions for frontend plugin -->
-        <node.version>v18.20.4</node.version>   <!-- WAS v20.11.0 -->
+        <node.version>v18.20.4</node.version>
         <npm.version>10.8.1</npm.version>
         
-        <!-- Nexus snapshots URL -->
         <nexus.snapshots.url>http://13.50.105.189:8081/repository/maven-snapshots1/</nexus.snapshots.url>
+        <nexus.releases.url>http://13.50.105.189:8081/repository/maven-release1/</nexus.releases.url>
+        
+        <sonar.projectKey>Iman</sonar.projectKey>
     </properties>
 
-    <!-- Nexus Repositories -->
     <repositories>
         <repository>
             <id>nexus-snapshots</id>
@@ -42,7 +37,6 @@
         </repository>
     </repositories>
 
-    <!-- Nexus Distribution Management -->
     <distributionManagement>
         <snapshotRepository>
             <id>nexus-snapshots</id>
@@ -50,27 +44,23 @@
         </snapshotRepository>
         <repository>
             <id>nexus-release</id>
-            <url>http://13.50.105.189:8081/repository/maven-release1/</url>
+            <url>${nexus.releases.url}</url>
         </repository>
     </distributionManagement>
 
-    <!-- Dependencies (add your Java dependencies here) -->
     <dependencies>
-        <!-- Servlet API for WAR -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
             <version>6.0.0</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Add your other dependencies here -->
     </dependencies>
 
     <build>
         <finalName>Iman-${project.version}</finalName>
-        
+
         <plugins>
-            <!-- Maven Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -82,38 +72,38 @@
                 </configuration>
             </plugin>
 
-            <!-- Frontend Build with Node.js/Gulp (REPLACES ANTRUN) -->
-          <plugin>
+            <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.15.0</version>
                 <executions>
-                    <!-- 1. Install Node v18 + npm -->
                     <execution>
                         <id>install-node-and-npm</id>
                         <phase>initialize</phase>
-                        <goals><goal>install-node-and-npm</goal></goals>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
                         <configuration>
                             <nodeVersion>${node.version}</nodeVersion>
                             <npmVersion>${npm.version}</npmVersion>
                         </configuration>
                     </execution>
-
-                    <!-- 2. NPM Install -->
                     <execution>
                         <id>npm-install</id>
                         <phase>generate-resources</phase>
-                        <goals><goal>npm</goal></goals>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
                         <configuration>
                             <arguments>install</arguments>
                         </configuration>
                     </execution>
-
-                    <!-- 3. Gulp Build -->
                     <execution>
                         <id>gulp-build</id>
                         <phase>generate-resources</phase>
-                        <goals><goal>gulp</goal></goals>
+                        <goals>
+                            <goal>gulp</goal>
+                        </goals>
                         <configuration>
                             <arguments>build</arguments>
                         </configuration>
@@ -121,15 +111,12 @@
                 </executions>
             </plugin>
 
-
-
-            <!-- Copy Frontend Assets to WAR -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.3.1</version>
                 <executions>
                     <execution>
-                        <id>copy-frontend-resources</id>
+                        <id>copy-frontend</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -140,16 +127,10 @@
                                 <resource>
                                     <directory>dest</directory>
                                     <filtering>false</filtering>
-                                    <includes>
-                                        <include>**/*</include>
-                                    </includes>
                                 </resource>
                                 <resource>
                                     <directory>dist</directory>
                                     <filtering>false</filtering>
-                                    <includes>
-                                        <include>**/*</include>
-                                    </includes>
                                 </resource>
                             </resources>
                             <overwrite>true</overwrite>
@@ -158,7 +139,6 @@
                 </executions>
             </plugin>
 
-            <!-- Maven WAR Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -166,33 +146,21 @@
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <warName>Iman-${project.version}</warName>
-                    <webResources>
-                        <resource>
-                            <directory>src/main/webapp</directory>
-                            <filtering>true</filtering>
-                        </resource>
-                    </webResources>
                 </configuration>
             </plugin>
 
-            <!-- SonarQube Scanner -->
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>4.0.0.4121</version>
             </plugin>
 
-            <!-- Nexus Deploy Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>3.1.1</version>
-                <configuration>
-                    <skip>false</skip>
-                </configuration>
             </plugin>
 
-            <!-- Tomcat 10 Deployment (Updated for Jakarta EE) -->
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>
@@ -205,8 +173,6 @@
                     <source>war</source>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
-
 </project>
